@@ -1,0 +1,75 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: #222;
+}
+
+h1 { font-size: 1.4rem; }
+h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+fieldset {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+label.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  display: block;
+  width: 100%;
+  padding: 0.4rem;
+  margin-top: 0.25rem;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.notice {
+  background: #eef6ff;
+  border: 1px solid #b6d9ff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.error {
+  color: #b00020;
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+}
+
+#log {
+  background: #111;
+  color: #ddd;
+  padding: 1rem;
+  border-radius: 6px;
+  height: 60vh;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-size: 0.85rem;
+}

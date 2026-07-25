@@ -1,0 +1,5 @@
+yt-dlp
+faster-whisper==1.2.1
+flask
+requests
+python-dotenv
