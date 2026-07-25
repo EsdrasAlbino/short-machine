@@ -1,24 +1,59 @@
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555;
+  --border: #ccc;
+  --input-bg: #ffffff;
+  --input-fg: #111;
+  --notice-bg: #eef6ff;
+  --notice-border: #b6d9ff;
+  --log-bg: #111;
+  --log-fg: #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --fg: #f0f0f0;
+    --muted: #b5b5b5;
+    --border: #444;
+    --input-bg: #2a2a2a;
+    --input-fg: #f0f0f0;
+    --notice-bg: #12283d;
+    --notice-border: #2f5c8a;
+    --log-bg: #000;
+    --log-fg: #ddd;
+  }
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   max-width: 640px;
   margin: 2rem auto;
   padding: 0 1rem;
-  color: #222;
+  background: var(--bg);
+  color: var(--fg);
 }
 
-h1 { font-size: 1.4rem; }
-h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+h1 { font-size: 1.4rem; color: var(--fg); }
+h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--fg); }
+
+a { color: #4da3ff; }
 
 fieldset {
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 1rem;
 }
+
+legend { color: var(--fg); }
 
 label {
   display: block;
   margin-bottom: 0.75rem;
   font-size: 0.9rem;
+  color: var(--muted);
 }
 
 label.checkbox {
@@ -36,6 +71,10 @@ select {
   padding: 0.4rem;
   margin-top: 0.25rem;
   box-sizing: border-box;
+  background: var(--input-bg);
+  color: var(--input-fg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
 }
 
 button {
@@ -43,6 +82,10 @@ button {
   margin-right: 0.5rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--fg);
 }
 
 button:disabled {
@@ -51,21 +94,22 @@ button:disabled {
 }
 
 .notice {
-  background: #eef6ff;
-  border: 1px solid #b6d9ff;
+  background: var(--notice-bg);
+  border: 1px solid var(--notice-border);
+  color: var(--fg);
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
 }
 
 .error {
-  color: #b00020;
+  color: #ff6b6b;
   margin-top: 0.5rem;
   white-space: pre-wrap;
 }
 
 #log {
-  background: #111;
-  color: #ddd;
+  background: var(--log-bg);
+  color: var(--log-fg);
   padding: 1rem;
   border-radius: 6px;
   height: 60vh;
