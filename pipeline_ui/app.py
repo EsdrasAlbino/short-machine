@@ -57,6 +57,7 @@ def config_from_form(form):
             "icon_path": form.get("icon_path", "").strip(),
             "watermark_region": form.get("watermark_region", "").strip(),
             "captions_enabled": form.get("captions_enabled") == "on",
+            "background_blur": form.get("background_blur") == "on",
         },
         "schedule": {
             "integration_id": form.get("integration_id", "").strip(),

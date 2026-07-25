@@ -14,6 +14,7 @@ function fillForm(config) {
   document.getElementById("icon_path").value = config.edit?.icon_path || "";
   document.getElementById("watermark_region").value = config.edit?.watermark_region || "";
   document.getElementById("captions_enabled").checked = !!config.edit?.captions_enabled;
+  document.getElementById("background_blur").checked = config.edit?.background_blur !== false;
   document.getElementById("integration_id").value = config.schedule?.integration_id || "";
   document.getElementById("posts_per_day").value = config.schedule?.posts_per_day || "";
   document.getElementById("times_utc").value = (config.schedule?.times_utc || []).join(",");

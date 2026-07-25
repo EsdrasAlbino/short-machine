@@ -36,11 +36,14 @@ def run(config, video_paths, output_dir):
         whisper_model = WhisperModel(DEFAULT_WHISPER_MODEL, device="cpu", compute_type="int8")
 
     icon_path = edit_cfg.get("icon_path")
+    # Defaults to on (matches the football videos) for presets saved before
+    # this option existed; explicit false turns it off.
+    background_blur = edit_cfg.get("background_blur", True)
     args = argparse.Namespace(
         caption=edit_cfg["captions_enabled"],
         srt_only=False,
         model=DEFAULT_WHISPER_MODEL,
-        background="blur",
+        background="blur" if background_blur else None,
         canvas_size=DEFAULT_CANVAS_SIZE,
         watermark=edit_cfg.get("logo_path"),
         watermark_position=DEFAULT_WATERMARK_POSITION,
