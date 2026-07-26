@@ -107,6 +107,18 @@ button:disabled {
   white-space: pre-wrap;
 }
 
+#preview-area {
+  margin-top: 1.5rem;
+}
+
+#preview-image {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
 #log {
   background: var(--log-bg);
   color: var(--log-fg);

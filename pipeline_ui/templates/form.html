@@ -55,8 +55,15 @@
     <div id="error" class="error"></div>
 
     <button type="button" id="save-btn">Salvar preset</button>
+    <button type="button" id="preview-btn">Pré-visualizar</button>
     <button type="button" id="run-btn" {% if active_run_id %}disabled{% endif %}>Rodar</button>
   </form>
+
+  <div id="preview-area" style="display:none;">
+    <h3>Prévia</h3>
+    <p id="preview-status"></p>
+    <img id="preview-image" alt="Prévia do vídeo editado">
+  </div>
 
   <script src="/static/form.js"></script>
 </body>

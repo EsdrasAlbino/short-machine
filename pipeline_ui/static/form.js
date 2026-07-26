@@ -57,6 +57,34 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   presetSelect.value = data.run_name;
 });
 
+const previewBtn = document.getElementById("preview-btn");
+const previewArea = document.getElementById("preview-area");
+const previewStatus = document.getElementById("preview-status");
+const previewImage = document.getElementById("preview-image");
+
+previewBtn.addEventListener("click", async () => {
+  showError("");
+  previewArea.style.display = "block";
+  previewStatus.textContent = "Gerando prévia (baixando/editando 1 vídeo de exemplo)...";
+  previewImage.style.display = "none";
+  previewBtn.disabled = true;
+
+  try {
+    const res = await fetch("/preview", { method: "POST", body: new FormData(form) });
+    const data = await res.json();
+    if (!res.ok) {
+      previewStatus.textContent = "";
+      showError(data.error || "Erro ao gerar prévia.");
+      return;
+    }
+    previewStatus.textContent = "";
+    previewImage.src = `${data.image_url}?t=${Date.now()}`;
+    previewImage.style.display = "block";
+  } finally {
+    previewBtn.disabled = false;
+  }
+});
+
 document.getElementById("run-btn").addEventListener("click", async () => {
   showError("");
   const res = await fetch("/run", { method: "POST", body: new FormData(form) });
