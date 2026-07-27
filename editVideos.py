@@ -117,6 +117,18 @@ def compute_delogo_region(width, height, region_fracs):
     return x, y, w, h
 
 
+def resolve_position(position):
+    """
+    Resolve an overlay position into an (x, y) ffmpeg overlay expression pair.
+    Accepts either a named key into POSITIONS, or an explicit "x,y" pixel
+    coordinate string (e.g. "40,1600") for free placement.
+    """
+    if "," in position:
+        x, y = position.split(",", 1)
+        return x.strip(), y.strip()
+    return POSITIONS[position]
+
+
 def build_filter_complex(args, input_map, srt_path, delogo_region=None):
     """
     Build the ffmpeg filter_complex graph for one video: (optional source watermark
@@ -171,7 +183,7 @@ def build_filter_complex(args, input_map, srt_path, delogo_region=None):
 
     if args.watermark:
         wm_idx = input_map["watermark"]
-        x, y = POSITIONS[args.watermark_position]
+        x, y = resolve_position(args.watermark_position)
         if args.watermark_opacity < 1.0:
             filters.append(f"[{wm_idx}:v]format=rgba,colorchannelmixer=aa={args.watermark_opacity}[wm]")
             wm_label = "wm"
@@ -184,7 +196,7 @@ def build_filter_complex(args, input_map, srt_path, delogo_region=None):
         stage += 1
 
     for icon_idx, position in zip(input_map.get("icons", []), args.icon_position):
-        x, y = POSITIONS[position]
+        x, y = resolve_position(position)
         next_label = f"base{stage}"
         filters.append(f"[{current_label}][{icon_idx}:v]overlay={x}:{y}[{next_label}]")
         current_label = next_label
@@ -294,10 +306,11 @@ def parse_args():
                          help="Path to a background image, or 'blur' to auto-generate a blurred backdrop from the video itself")
     parser.add_argument("--canvas-size", default="1080x1920", help="Output canvas size, e.g. 1080x1920")
     parser.add_argument("--watermark", default=None, help="Path to a watermark PNG (with transparency)")
-    parser.add_argument("--watermark-position", default="bottom-right", choices=list(POSITIONS.keys()))
+    parser.add_argument("--watermark-position", default="bottom-right",
+                         help="Named position (%s) or an explicit 'x,y' pixel coordinate" % ", ".join(POSITIONS.keys()))
     parser.add_argument("--watermark-opacity", type=float, default=1.0, help="Watermark opacity, 0.0-1.0")
     parser.add_argument("--icons", nargs="*", default=[], help="Paths to icon PNGs (fixed across the whole batch)")
-    parser.add_argument("--icon-position", nargs="*", default=[], choices=list(POSITIONS.keys()),
+    parser.add_argument("--icon-position", nargs="*", default=[],
                          help="One position per icon, same order as --icons")
     parser.add_argument("--remove-source-watermark", action="store_true",
                          help="Scrub a burned-in watermark from the source video (e.g. a creator's own "
