@@ -14,6 +14,22 @@ DEFAULT_CANVAS_SIZE = "1080x1920"
 DEFAULT_WHISPER_MODEL = "small"
 
 
+def resolve_position_arg(position_config, default):
+    """
+    Convert a config position value ({x,y} dict from the visual editor, a
+    legacy named-position string, or absent) into the string
+    editVideos.py's --watermark-position/--icon-position expect: "x,y" for
+    explicit coordinates, or the string as-is for a named position. Falls
+    back to `default` when position_config is None (presets saved before
+    this option existed).
+    """
+    if position_config is None:
+        return default
+    if isinstance(position_config, dict):
+        return f"{position_config['x']},{position_config['y']}"
+    return position_config
+
+
 def run(config, video_paths, output_dir):
     """
     Edit each downloaded video: remove the source creator's burned-in
@@ -46,10 +62,10 @@ def run(config, video_paths, output_dir):
         background="blur" if background_blur else None,
         canvas_size=DEFAULT_CANVAS_SIZE,
         watermark=edit_cfg.get("logo_path"),
-        watermark_position=DEFAULT_WATERMARK_POSITION,
+        watermark_position=resolve_position_arg(edit_cfg.get("logo_position"), DEFAULT_WATERMARK_POSITION),
         watermark_opacity=1.0,
         icons=[icon_path] if icon_path else [],
-        icon_position=[DEFAULT_ICON_POSITION] if icon_path else [],
+        icon_position=[resolve_position_arg(edit_cfg.get("icon_position"), DEFAULT_ICON_POSITION)] if icon_path else [],
         remove_source_watermark=bool(edit_cfg.get("watermark_region")),
         source_watermark_region=edit_cfg.get("watermark_region"),
     )
