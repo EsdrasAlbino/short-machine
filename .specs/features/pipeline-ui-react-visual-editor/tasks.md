@@ -1,7 +1,7 @@
 # Pipeline UI React + Visual Branding Editor Tasks
 
 **Design**: `.specs/features/pipeline-ui-react-visual-editor/design.md`
-**Status**: Draft
+**Status**: Done (17/17 tasks, 29 backend + 30 frontend tests passing, verified end-to-end)
 
 ---
 
