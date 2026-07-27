@@ -14,8 +14,10 @@ class FakeEventSource {
   onmessage: ((event: MessageEvent) => void) | null = null
   onerror: (() => void) | null = null
   private listeners: Record<string, ((event: MessageEvent) => void)[]> = {}
+  url: string
 
-  constructor(public url: string) {
+  constructor(url: string) {
+    this.url = url
     FakeEventSource.instances.push(this)
   }
 
@@ -50,7 +52,7 @@ class FakeEventSource {
 beforeEach(() => {
   FakeEventSource.instances = []
   // @ts-expect-error -- test double for the browser EventSource API
-  global.EventSource = FakeEventSource
+  globalThis.EventSource = FakeEventSource
 })
 
 afterEach(() => {

@@ -10,7 +10,7 @@ const CONFIG: PipelineConfig = {
 }
 
 function mockFetchOnce(body: unknown, ok = true, status = 200) {
-  global.fetch = vi.fn().mockResolvedValue({
+  globalThis.fetch = vi.fn().mockResolvedValue({
     ok,
     status,
     statusText: 'error',
