@@ -37,6 +37,13 @@ app.include_router(presets.router)
 app.include_router(sample_video.router)
 app.include_router(runs.router)
 
+# Narrow static mount for serving sample/raw videos to the browser (<video>
+# element, FFmpeg.wasm) -- deliberately NOT the whole repo, which holds
+# .env and other secrets.
+RAW_DIR = os.path.join(REPO_ROOT, "raw")
+os.makedirs(RAW_DIR, exist_ok=True)
+app.mount("/media/raw", StaticFiles(directory=RAW_DIR), name="raw-media")
+
 # In production, the built React app is served from the same process/port
 # as the API -- keeps deployment to one process, matching the Flask app's
 # "simple local tool" footprint.
