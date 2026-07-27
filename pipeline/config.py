@@ -27,6 +27,23 @@ def _check_fields(section_name, section, required):
             )
 
 
+def _check_optional_position(section_name, field, value):
+    """
+    logo_position/icon_position are optional; when present they're either a
+    legacy named-position string or an explicit {"x": int, "y": int} dict
+    (output-canvas pixel coordinates) written by the visual editor.
+    """
+    if isinstance(value, str):
+        return
+    if isinstance(value, dict):
+        if "x" not in value or "y" not in value:
+            raise ConfigError(f"Config error: '{section_name}.{field}' dict must have 'x' and 'y'")
+        if not isinstance(value["x"], (int, float)) or not isinstance(value["y"], (int, float)):
+            raise ConfigError(f"Config error: '{section_name}.{field}.x'/'.y' must be numbers")
+        return
+    raise ConfigError(f"Config error: '{section_name}.{field}' must be a string or an {{x,y}} object")
+
+
 def load_config(config_path):
     """
     Load and validate a run_pipeline.py config JSON file.
@@ -45,6 +62,10 @@ def load_config(config_path):
     _check_fields("download", config["download"], REQUIRED_DOWNLOAD_FIELDS)
     _check_fields("edit", config["edit"], REQUIRED_EDIT_FIELDS)
     _check_fields("schedule", config["schedule"], REQUIRED_SCHEDULE_FIELDS)
+
+    for field in ("logo_position", "icon_position"):
+        if field in config["edit"]:
+            _check_optional_position("edit", field, config["edit"][field])
 
     if config["download"]["video_count"] <= 0:
         raise ConfigError("Config error: 'download.video_count' must be a positive integer")
