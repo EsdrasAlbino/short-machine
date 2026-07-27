@@ -1,5 +1,7 @@
 yt-dlp
 faster-whisper==1.2.1
-flask
+fastapi
+uvicorn
 requests
 python-dotenv
+pytest
