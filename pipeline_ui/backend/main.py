@@ -1,6 +1,7 @@
 import os
 import sys
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +13,8 @@ FRONTEND_DIST = os.path.join(PIPELINE_UI_DIR, "frontend", "dist")
 
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
+
+load_dotenv(os.path.join(REPO_ROOT, ".env"))
 
 from pipeline_ui.backend.routes import presets, runs, sample_video  # noqa: E402
 
