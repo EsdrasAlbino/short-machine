@@ -2,6 +2,7 @@ import glob
 import os
 import sys
 from typing import Any, Dict
+from urllib.parse import quote
 
 from fastapi import APIRouter, HTTPException
 
@@ -48,4 +49,9 @@ def get_sample_video(payload: Dict[str, Any]):
         sample_path = paths[0]
 
     relative_path = os.path.relpath(sample_path, RAW_DIR)
-    return {"video_url": f"/media/raw/{relative_path}"}
+    # Filenames routinely contain characters (spaces, '#', unicode) that are
+    # meaningful in a URL -- an unencoded '#' in particular gets parsed by
+    # the browser as a fragment identifier, silently truncating the rest of
+    # the path. Encode each path segment, keeping '/' as the separator.
+    encoded_path = "/".join(quote(part) for part in relative_path.split(os.sep))
+    return {"video_url": f"/media/raw/{encoded_path}"}

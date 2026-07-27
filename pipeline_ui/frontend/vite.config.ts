@@ -10,6 +10,14 @@ export default defineConfig({
       '/api': 'http://localhost:8000',
       '/media': 'http://localhost:8000',
     },
+    // FFmpeg.wasm's multi-threaded core requires SharedArrayBuffer, which
+    // browsers only expose in a cross-origin-isolated context (found via
+    // manual e2e verification, T16: window.crossOriginIsolated was false
+    // and FFmpeg.wasm silently fell back to static-frame mode).
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
   },
   test: {
     environment: 'jsdom',

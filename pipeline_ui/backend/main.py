@@ -28,6 +28,18 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def cross_origin_isolation_headers(request, call_next):
+    # FFmpeg.wasm's multi-threaded core requires SharedArrayBuffer, which
+    # browsers only expose in a cross-origin-isolated context (found via
+    # manual e2e verification, T16). Needed here for production, where this
+    # process serves the built React app directly.
+    response = await call_next(request)
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+    response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
+    return response
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok"}

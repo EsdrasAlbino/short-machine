@@ -49,6 +49,23 @@ def test_downloads_when_no_sample_exists(client, monkeypatch):
     assert res.json() == {"video_url": "/media/raw/newuser/20260101_newuser_title.mp4"}
 
 
+def test_filename_with_hash_and_spaces_is_url_encoded(client, tmp_path):
+    # Regression test: an unencoded '#' in the filename gets parsed by the
+    # browser as a URL fragment identifier, silently truncating the rest of
+    # the path -- found via manual e2e verification (T16) against a real
+    # downloaded filename containing a hashtag.
+    handle_dir = tmp_path / "someuser"
+    handle_dir.mkdir()
+    filename = "20260101_someuser_Some title #hashtag.mp4"
+    (handle_dir / filename).write_bytes(b"fake video")
+
+    res = client.post("/api/sample-video", json={"profile_url": "https://www.tiktok.com/@someuser"})
+    assert res.status_code == 200
+    video_url = res.json()["video_url"]
+    assert "#" not in video_url
+    assert video_url == "/media/raw/someuser/20260101_someuser_Some%20title%20%23hashtag.mp4"
+
+
 def test_download_error_returns_400(client, monkeypatch):
     def _fake_download_run(config, raw_dir):
         raise DownloadError("profile not found")
