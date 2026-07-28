@@ -182,3 +182,16 @@ downloads/
 
 # pipeline_ui generated preview frames/videos
 pipeline_ui/previews/
+
+# Downloaded/edited video data and generated run artifacts (mounted as
+# Docker volumes in production, never committed)
+/raw/
+/edited/
+pipeline_ui/backend/configs/
+pipeline_ui/backend/runs/
+pipeline_ui/backend/previews/
+# Leftover preset data from the retired Flask app, unused by the new backend
+pipeline_ui/configs/
+
+# macOS
+.DS_Store

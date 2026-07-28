@@ -1,0 +1,27 @@
+.git
+.env
+*.pyc
+__pycache__/
+.pytest_cache/
+.specs/
+docs/
+
+# Frontend build artifacts / deps (rebuilt inside the image)
+pipeline_ui/frontend/node_modules/
+pipeline_ui/frontend/dist/
+
+# Persistent data (mounted as volumes at runtime, never baked into the image)
+raw/
+edited/
+my_videos/
+images/
+pipeline_ui/backend/configs/
+pipeline_ui/backend/runs/
+pipeline_ui/backend/previews/
+
+# Editor/OS cruft
+.DS_Store
+*.mp4
+*.mov
+cookies.txt
+links.txt

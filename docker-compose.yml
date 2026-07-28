@@ -1,0 +1,35 @@
+services:
+  pipeline-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pipeline-ui
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Coolify auto-injects PORT for every app; respecting it (instead of
+      # hardcoding 8000) avoided a real EADDRINUSE conflict hit with Postiz
+      # earlier in this project. Override PIPELINE_UI_PORT to change the
+      # host-side port; PORT changes what the app binds to inside the container.
+      - PORT=${PORT:-8000}
+    ports:
+      - "${PIPELINE_UI_PORT:-8000}:${PORT:-8000}"
+    volumes:
+      # Named volumes (not relative bind mounts) -- Coolify re-clones the git
+      # repo into a fresh directory on each deploy, so a bind mount like
+      # "./raw:/app/raw" would get wiped exactly like Postiz's /uploads was
+      # in a past incident. Named volumes live outside the checkout and
+      # survive redeploys.
+      - pipeline_raw:/app/raw
+      - pipeline_edited:/app/edited
+      - pipeline_configs:/app/pipeline_ui/backend/configs
+      - pipeline_runs:/app/pipeline_ui/backend/runs
+      - pipeline_previews:/app/pipeline_ui/backend/previews
+
+volumes:
+  pipeline_raw:
+  pipeline_edited:
+  pipeline_configs:
+  pipeline_runs:
+  pipeline_previews:
