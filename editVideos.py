@@ -277,7 +277,11 @@ def process_video(video_path, args, whisper_model, output_dir):
             "-filter_complex", filter_complex,
             "-map", out_label,
             "-map", "0:a?",
-            "-c:v", "libx264", "-c:a", "aac",
+            # veryfast trades some compression efficiency for a large drop in
+            # encode CPU time -- default "medium" was saturating every core
+            # on the shared server during large batches, starving Coolify's
+            # other apps (Postiz, n8n, Metabase) running on the same host.
+            "-c:v", "libx264", "-preset", "veryfast", "-c:a", "aac",
             output_path,
         ]
 

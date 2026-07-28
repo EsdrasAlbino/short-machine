@@ -9,6 +9,14 @@ services:
       - .env
     environment:
       - PORT=8000
+    deploy:
+      resources:
+        limits:
+          # ffmpeg (edit stage) otherwise uses every core it can see by
+          # default, starving Coolify's other apps (Postiz, n8n, Metabase)
+          # on the same host during a large batch run. Caps this container
+          # regardless of how many threads ffmpeg tries to spawn.
+          cpus: "2"
     expose:
       # No host "ports:" publish -- Coolify's own Traefik proxy runs on the
       # host's port 8000, so binding the container there too collided with
