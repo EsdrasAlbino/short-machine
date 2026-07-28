@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import PresetForm from './components/PresetForm'
+import DownloadStep from './components/DownloadStep'
+import EditStep from './components/EditStep'
+import ExecuteStep from './components/ExecuteStep'
 import RunLog from './components/RunLog'
-import VisualEditor from './components/VisualEditor'
-import { getSampleVideo, startRun } from './lib/api'
-import type { PipelineConfig } from './lib/types'
+import type { EditConfig, PipelineConfig } from './lib/types'
+
+type Step = 'download' | 'edit' | 'execute'
 
 function emptyConfig(): PipelineConfig {
   return {
@@ -22,38 +24,25 @@ function emptyConfig(): PipelineConfig {
 
 function App() {
   const [config, setConfig] = useState<PipelineConfig>(emptyConfig())
+  const [step, setStep] = useState<Step>('download')
+  const [sampleVideoUrl, setSampleVideoUrl] = useState<string | null>(null)
+
   const [startDate, setStartDate] = useState('')
   const [dryRun, setDryRun] = useState(false)
-
-  const [sampleVideoUrl, setSampleVideoUrl] = useState<string | null>(null)
-  const [editorError, setEditorError] = useState('')
-
   const [runId, setRunId] = useState<string | null>(null)
-  const [runError, setRunError] = useState('')
 
-  async function handleOpenEditor() {
-    setEditorError('')
-    try {
-      const { video_url } = await getSampleVideo(config.download.profile_url)
-      setSampleVideoUrl(video_url)
-    } catch (err) {
-      setEditorError(err instanceof Error ? err.message : 'Falha ao carregar vídeo de exemplo')
-    }
+  function handleDownloadNext(videoUrl: string) {
+    setSampleVideoUrl(videoUrl)
+    setStep('edit')
   }
 
-  function handleEditorConfirm(edit: PipelineConfig['edit']) {
+  function handleEditConfigChange(edit: EditConfig) {
     setConfig((current) => ({ ...current, edit }))
-    setSampleVideoUrl(null)
   }
 
-  async function handleRun() {
-    setRunError('')
-    try {
-      const { run_id } = await startRun(config, startDate, dryRun)
-      setRunId(run_id)
-    } catch (err) {
-      setRunError(err instanceof Error ? err.message : 'Erro ao iniciar a execução')
-    }
+  function handleEditNext(edit: EditConfig) {
+    setConfig((current) => ({ ...current, edit }))
+    setStep('execute')
   }
 
   if (runId) {
@@ -71,32 +60,32 @@ function App() {
     <main>
       <h1>Pipeline TikTok → Postiz</h1>
 
-      <PresetForm
-        config={config}
-        onConfigChange={setConfig}
-        startDate={startDate}
-        onStartDateChange={setStartDate}
-        dryRun={dryRun}
-        onDryRunChange={setDryRun}
-      />
+      {step === 'download' && (
+        <DownloadStep config={config} onConfigChange={setConfig} onNext={handleDownloadNext} />
+      )}
 
-      <button type="button" onClick={handleOpenEditor}>
-        Posicionar visualmente
-      </button>
-      {editorError && <div className="error">{editorError}</div>}
-
-      {sampleVideoUrl && (
-        <VisualEditor
+      {step === 'edit' && sampleVideoUrl && (
+        <EditStep
+          editConfig={config.edit}
           sampleVideoUrl={sampleVideoUrl}
-          initialConfig={config.edit}
-          onConfirm={handleEditorConfirm}
+          onEditConfigChange={handleEditConfigChange}
+          onBack={() => setStep('download')}
+          onNext={handleEditNext}
         />
       )}
 
-      {runError && <div className="error">{runError}</div>}
-      <button type="button" onClick={handleRun}>
-        Rodar
-      </button>
+      {step === 'execute' && (
+        <ExecuteStep
+          config={config}
+          startDate={startDate}
+          onStartDateChange={setStartDate}
+          dryRun={dryRun}
+          onDryRunChange={setDryRun}
+          onConfigChange={setConfig}
+          onBack={() => setStep('edit')}
+          onRunStarted={setRunId}
+        />
+      )}
     </main>
   )
 }
