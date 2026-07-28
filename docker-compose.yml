@@ -8,13 +8,13 @@ services:
     env_file:
       - .env
     environment:
-      # Coolify auto-injects PORT for every app; respecting it (instead of
-      # hardcoding 8000) avoided a real EADDRINUSE conflict hit with Postiz
-      # earlier in this project. Override PIPELINE_UI_PORT to change the
-      # host-side port; PORT changes what the app binds to inside the container.
-      - PORT=${PORT:-8000}
-    ports:
-      - "${PIPELINE_UI_PORT:-8000}:${PORT:-8000}"
+      - PORT=8000
+    expose:
+      # No host "ports:" publish -- Coolify's own Traefik proxy runs on the
+      # host's port 8000, so binding the container there too collided with
+      # Coolify itself. Traefik routes the configured domain to this
+      # container over Coolify's internal Docker network instead.
+      - "8000"
     volumes:
       # Named volumes (not relative bind mounts) -- Coolify re-clones the git
       # repo into a fresh directory on each deploy, so a bind mount like
