@@ -113,18 +113,19 @@ export default function ExecuteStep({
       </label>
 
       {saveError && <div className="error">{saveError}</div>}
-      <button type="button" onClick={handleSave} disabled={saving}>
-        {saving ? 'Salvando...' : 'Salvar preset'}
-      </button>
-
       {runError && <div className="error">{runError}</div>}
-      <button type="button" onClick={handleRun}>
-        Rodar
-      </button>
 
-      <button type="button" onClick={onBack}>
-        Voltar
-      </button>
+      <div className="step-actions">
+        <button type="button" className="btn btn-secondary" onClick={onBack}>
+          Voltar
+        </button>
+        <button type="button" className="btn btn-secondary" onClick={handleSave} disabled={saving}>
+          {saving ? 'Salvando...' : 'Salvar preset'}
+        </button>
+        <button type="button" className="btn btn-primary" onClick={handleRun}>
+          Rodar
+        </button>
+      </div>
     </section>
   )
 }

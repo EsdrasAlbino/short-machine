@@ -66,9 +66,11 @@ export default function EditStep({
 
       <VisualEditor sampleVideoUrl={sampleVideoUrl} initialConfig={editConfig} onConfirm={onNext} />
 
-      <button type="button" onClick={onBack}>
-        Voltar
-      </button>
+      <div className="step-actions">
+        <button type="button" className="btn btn-secondary" onClick={onBack}>
+          Voltar
+        </button>
+      </div>
     </section>
   )
 }

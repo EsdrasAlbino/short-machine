@@ -3,6 +3,7 @@ import DownloadStep from './components/DownloadStep'
 import EditStep from './components/EditStep'
 import ExecuteStep from './components/ExecuteStep'
 import RunLog from './components/RunLog'
+import Stepper from './components/Stepper'
 import type { EditConfig, PipelineConfig } from './lib/types'
 
 type Step = 'download' | 'edit' | 'execute'
@@ -59,6 +60,7 @@ function App() {
   return (
     <main>
       <h1>Pipeline TikTok → Postiz</h1>
+      <Stepper current={step} />
 
       {step === 'download' && (
         <DownloadStep config={config} onConfigChange={setConfig} onNext={handleDownloadNext} />

@@ -282,9 +282,11 @@ export default function VisualEditor({ sampleVideoUrl, initialConfig, onConfirm 
         />
       </div>
 
-      <button type="button" onClick={() => onConfirm(currentConfig())}>
-        Confirmar posição
-      </button>
+      <div className="step-actions">
+        <button type="button" className="btn btn-primary" onClick={() => onConfirm(currentConfig())}>
+          Confirmar posição
+        </button>
+      </div>
     </div>
   )
 }

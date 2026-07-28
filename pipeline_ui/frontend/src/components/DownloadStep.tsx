@@ -105,13 +105,16 @@ export default function DownloadStep({ config, onConfigChange, onNext }: Downloa
 
       {error && <div className="error">{error}</div>}
 
-      <button
-        type="button"
-        onClick={handleFetchAndContinue}
-        disabled={loading || !config.download.profile_url}
-      >
-        {loading ? 'Buscando vídeo...' : 'Buscar vídeo e continuar'}
-      </button>
+      <div className="step-actions">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleFetchAndContinue}
+          disabled={loading || !config.download.profile_url}
+        >
+          {loading ? 'Buscando vídeo...' : 'Buscar vídeo e continuar'}
+        </button>
+      </div>
     </section>
   )
 }
